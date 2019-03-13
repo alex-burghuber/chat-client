@@ -19,17 +19,10 @@
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content style="overflow-x: hidden">
-        <div>
-            <mat-form-field class="mr-2" style="width: 20vw">
-                <input matInput style="font-weight: normal; font-size: small" [value]="uri">
-            </mat-form-field>
-            <button mat-raised-button (click)="onConnect()">Connect</button>
-        </div>
-        <div class="row m-2">
-            <label>
-                <input matInput>
-            </label>
-        </div>
+        <mat-form-field class="mx-2 mt-2" id="uri-input">
+            <input matInput placeholder="URI" [value]="uri">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="onConnect()">Connect</button>
         <div class="row m-2">
             <label>
                 <textarea cols="75" rows="20">{{log}}</textarea>
@@ -37,11 +30,14 @@
         </div>
         <mat-card class="ml-2 mr-2" id="chat-input">
             <mat-card-content>
-                <button mat-raised-button color="primary">Send</button>
-                <mat-form-field class="ml-3">
-                    <input matInput #message maxlength="128" placeholder="Message">
-                    <mat-hint>{{message.value.length}} / {{message.maxLength}}</mat-hint>
-                </mat-form-field>
+                <form (ngSubmit)="onSubmit()">
+                    <button mat-raised-button color="primary" type="submit">Send</button>
+                    <mat-form-field class="ml-3">
+                        <input matInput #message name="message" maxlength="128" placeholder="Message"
+                               [(ngModel)]="inputMessage">
+                        <mat-hint>{{message.value.length}} / {{message.maxLength}}</mat-hint>
+                    </mat-form-field>
+                </form>
             </mat-card-content>
         </mat-card>
     </mat-sidenav-content>

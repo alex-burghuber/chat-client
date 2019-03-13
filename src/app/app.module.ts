@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {AppRoutingModule} from './modules/app-routing/app-routing.module';
+import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
     MatButtonModule,
@@ -15,6 +15,7 @@ import {
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {ContentComponent} from './components/content/content.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import {ContentComponent} from './components/content/content.component';
     imports: [
         BrowserModule,
         AppRoutingModule,
+        FormsModule,
         BrowserAnimationsModule,
         MatButtonModule,
         MatToolbarModule,
@@ -32,7 +34,7 @@ import {ContentComponent} from './components/content/content.component';
         MatSidenavModule,
         MatIconModule,
         MatListModule,
-        MatInputModule
+        MatInputModule,
     ],
     providers: [],
     bootstrap: [AppComponent]
