@@ -1,11 +1,48 @@
 <mat-sidenav-container id="sidenav-container">
     <mat-sidenav mode="side" opened role="navigation">
         <mat-nav-list>
-            <a mat-list-item>First</a>
-            <a mat-list-item>Second</a>
+            <a mat-list-item>
+                <mat-icon class="mr-2">chat</mat-icon>
+                All
+            </a>
+            <a mat-list-item>
+                <mat-icon class="mr-2">person</mat-icon>
+                Chat 1
+            </a>
+            <a mat-list-item>
+                <mat-icon class="mr-2">person</mat-icon>
+                Chat 2
+            </a>
+            <a mat-list-item>
+                <mat-icon class="m-auto">add</mat-icon>
+            </a>
         </mat-nav-list>
     </mat-sidenav>
-  <mat-sidenav-content>
-      Main content
-  </mat-sidenav-content>
+    <mat-sidenav-content style="overflow-x: hidden">
+        <div>
+            <mat-form-field class="mr-2" style="width: 20vw">
+                <input matInput style="font-weight: normal; font-size: small" [value]="uri">
+            </mat-form-field>
+            <button mat-raised-button (click)="onConnect()">Connect</button>
+        </div>
+        <div class="row m-2">
+            <label>
+                <input matInput>
+            </label>
+        </div>
+        <div class="row m-2">
+            <label>
+                <textarea cols="75" rows="20">{{log}}</textarea>
+            </label>
+        </div>
+        <mat-card class="ml-2 mr-2" id="chat-input">
+            <mat-card-content>
+                <button mat-raised-button color="primary">Send</button>
+                <mat-form-field class="ml-3">
+                    <input matInput #message maxlength="128" placeholder="Message">
+                    <mat-hint>{{message.value.length}} / {{message.maxLength}}</mat-hint>
+                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+    </mat-sidenav-content>
 </mat-sidenav-container>
