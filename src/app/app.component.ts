@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
+import {WebSocketService} from './web-socket.service';
 
 @Component({
     selector: 'app-root',
@@ -9,28 +10,30 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    private webSocket: WebSocket;
-    uri = 'ws://localhost:8025/websockets/chat/User1';
-    username = '';
-    log = 'Opened log\n';
+
+    // private webSocket: WebSocket;
+    // uri = 'ws://localhost:8025/websockets/chat/';
+    // username = '';
+    // log = 'Opened log\n';
     inputMessage = '';
 
-    constructor(private router: Router, public dialog: MatDialog) {
+    constructor(private webSocketService: WebSocketService, private router: Router, public dialog: MatDialog) {
         this.openDialog();
     }
 
     openDialog(): void {
         const dialogRef = this.dialog.open(UriDialogComponent, {
-            width: '250px',
-            data: {uri: this.uri, username: this.username}
+            width: '500px',
+            data: {uri: this.webSocketService.uri, username: this.webSocketService.username}
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-            this.animal = result;
+        dialogRef.afterClosed().subscribe(data => {
+            this.webSocketService.uri = data.uri;
+            this.webSocketService.username = data.username;
         });
     }
 
+    /*
     onConnect() {
         this.webSocket = new WebSocket(this.uri);
 
@@ -53,4 +56,5 @@ export class AppComponent {
             this.webSocket.send(this.inputMessage);
         }
     }
+    */
 }

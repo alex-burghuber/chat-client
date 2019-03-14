@@ -8,10 +8,18 @@ import {DialogData} from '../../interfaces/DialogData';
     styleUrls: ['./uri-dialog.component.scss']
 })
 export class UriDialogComponent {
+    error: boolean;
 
     constructor(
         public dialogRef: MatDialogRef<UriDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     }
 
+    closeTest() {
+        this.dialogRef.close();
+    }
+
+    onConnect() {
+
+    }
 }

@@ -1,14 +1,14 @@
 <h1 mat-dialog-title>Hello there!</h1>
 <div mat-dialog-content>
-    <p>The server uri</p>
-    <mat-form-field>
-        <input matInput placeholder="Uri" [(ngModel)]="data.uri">
+    <p>Please enter the server URI and your username to continue.</p>
+    <mat-form-field style="width: 80%">
+        <input matInput placeholder="URI" [(ngModel)]="data.uri" type="url">
     </mat-form-field>
-    <p>Your username</p>
-    <mat-form-field>
+    <br>
+    <mat-form-field style="width: 40%">
         <input matInput placeholder="Username" [(ngModel)]="data.username">
     </mat-form-field>
 </div>
-<div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+<div mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" [mat-dialog-close]="data">Connect</button>
 </div>

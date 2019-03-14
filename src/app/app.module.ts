@@ -3,9 +3,10 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
+    MAT_DIALOG_DEFAULT_OPTIONS,
     MatButtonModule,
     MatCardModule,
-    MatDialog,
+    MatDialogModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
@@ -36,9 +37,14 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
         MatIconModule,
         MatListModule,
         MatInputModule,
-        MatDialog
+        MatDialogModule
     ],
-    providers: [],
+    entryComponents: [
+        UriDialogComponent
+    ],
+    providers: [
+        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
