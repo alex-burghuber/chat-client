@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
     MatButtonModule,
     MatCardModule,
+    MatDialog,
     MatIconModule,
     MatInputModule,
     MatListModule,
@@ -14,14 +15,14 @@ import {
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
-import {ContentComponent} from './components/content/content.component';
 import {FormsModule} from '@angular/forms';
+import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HeaderComponent,
-        ContentComponent,
+        UriDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -35,6 +36,7 @@ import {FormsModule} from '@angular/forms';
         MatIconModule,
         MatListModule,
         MatInputModule,
+        MatDialog
     ],
     providers: [],
     bootstrap: [AppComponent]

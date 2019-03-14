@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
     selector: 'app-header',
@@ -7,9 +7,14 @@ import {Component} from '@angular/core';
 })
 export class HeaderComponent {
 
-    uri = 'ws://localhost:8025/websockets/chat/test';
+    @Output() menuOpened = new EventEmitter<boolean>();
+    isOpen = false;
 
     constructor() {
     }
 
+    onMenu() {
+        this.isOpen = !this.isOpen;
+        this.menuOpened.emit(this.isOpen);
+    }
 }
