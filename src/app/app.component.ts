@@ -11,25 +11,30 @@ import {WebSocketService} from './web-socket.service';
 })
 export class AppComponent {
 
-    // private webSocket: WebSocket;
-    // uri = 'ws://localhost:8025/websockets/chat/';
-    // username = '';
-    // log = 'Opened log\n';
+    defaultUri = 'ws://localhost:8025/websockets/chat/';
+    log = '';
     inputMessage = '';
 
     constructor(private webSocketService: WebSocketService, private router: Router, public dialog: MatDialog) {
         this.openDialog();
     }
 
-    openDialog(): void {
+    openDialog() {
         const dialogRef = this.dialog.open(UriDialogComponent, {
             width: '500px',
-            data: {uri: this.webSocketService.uri, username: this.webSocketService.username}
+            data: {uri: this.defaultUri}
         });
 
         dialogRef.afterClosed().subscribe(data => {
-            this.webSocketService.uri = data.uri;
-            this.webSocketService.username = data.username;
+            // this.webSocketService.connect(data.uri, data.username);
+            this.messageReceiver();
+        });
+    }
+
+    messageReceiver() {
+        this.webSocketService.messageHandler();
+        this.webSocketService.messageReceiver.subscribe(data => {
+            this.log += data;
         });
     }
 
