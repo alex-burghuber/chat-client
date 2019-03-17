@@ -10,7 +10,10 @@ import {
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
+    MatSnackBarModule,
+    MatTabsModule,
     MatToolbarModule
 } from '@angular/material';
 
@@ -37,7 +40,10 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
         MatIconModule,
         MatListModule,
         MatInputModule,
-        MatDialogModule
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatTabsModule
     ],
     entryComponents: [
         UriDialogComponent

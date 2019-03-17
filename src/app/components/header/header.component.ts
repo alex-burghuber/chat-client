@@ -14,7 +14,7 @@ export class HeaderComponent {
     }
 
     onMenu() {
-        this.isOpen = !this.isOpen;
         this.menuOpened.emit(this.isOpen);
+        this.isOpen = !this.isOpen;
     }
 }

@@ -1,14 +1,55 @@
 <h1 mat-dialog-title>Hello there!</h1>
 <div mat-dialog-content>
-    <p>Please enter the server URI and your username to continue.</p>
-    <mat-form-field style="width: 80%">
-        <input matInput placeholder="URI" [(ngModel)]="data.uri" type="url">
-    </mat-form-field>
-    <br>
-    <mat-form-field style="width: 40%">
-        <input matInput placeholder="Username" [(ngModel)]="data.username">
-    </mat-form-field>
+    <div id="wrapper">
+        <mat-form-field style="width: 60%">
+            <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="data.uri" type="url">
+        </mat-form-field>
+        <mat-label *ngIf="connectionFailed && !buttonWasClicked" style="margin-left: auto">Connection failed</mat-label>
+        <mat-progress-spinner *ngIf="buttonWasClicked" style="margin-left: auto;" class="mr-2" mode="indeterminate"
+                              diameter="30">
+        </mat-progress-spinner>
+        <button mat-raised-button color="primary" [disabled]="isConnected"
+                [style.margin-left]="!buttonWasClicked ? 'auto' : 'unset'" (click)="connect()">Connect
+        </button>
+    </div>
+    <div *ngIf="isConnected">
+        <mat-tab-group [(selectedIndex)]="tabGroupIndex" dynamicHeight>
+            <mat-tab label="Login">
+                <form (ngSubmit)="onLogin()">
+                    <p>
+                        <mat-form-field>
+                            <input matInput placeholder="Username" type="text" name="username" autocomplete="off">
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field>
+                            <input matInput placeholder="Password" type="password" name="password">
+                        </mat-form-field>
+                    </p>
+                </form>
+            </mat-tab>
+            <mat-tab label="Register">
+                <form (ngSubmit)="onRegister()">
+                    <p>
+                        <mat-form-field>
+                            <input matInput placeholder="Username" type="text" name="username" autocomplete="off">
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field>
+                            <input matInput placeholder="Password" type="password" name="password">
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field>
+                            <input matInput placeholder="Repeat Password" type="password" name="repeatPassword">
+                        </mat-form-field>
+                    </p>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
 </div>
-<div mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" (click)="connect()">Connect</button>
+<div mat-dialog-actions *ngIf="isConnected" align="end">
+    <button mat-raised-button color="primary" [innerHTML]="tabGroupIndex === 0 ? 'Login' : 'Register'"></button>
 </div>

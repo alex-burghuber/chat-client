@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
 import {WebSocketService} from './web-socket.service';
 
@@ -11,24 +11,13 @@ import {WebSocketService} from './web-socket.service';
 })
 export class AppComponent {
 
-    defaultUri = 'ws://localhost:8025/websockets/chat/';
+    defaultUri = 'ws://localhost:8025/websockets/chat';
     log = '';
     inputMessage = '';
 
-    constructor(private webSocketService: WebSocketService, private router: Router, public dialog: MatDialog) {
+    constructor(private webSocketService: WebSocketService, private router: Router,
+                private dialog: MatDialog, private snackBar: MatSnackBar) {
         this.openDialog();
-    }
-
-    openDialog() {
-        const dialogRef = this.dialog.open(UriDialogComponent, {
-            width: '500px',
-            data: {uri: this.defaultUri}
-        });
-
-        dialogRef.afterClosed().subscribe(data => {
-            // this.webSocketService.connect(data.uri, data.username);
-            this.messageReceiver();
-        });
     }
 
     messageReceiver() {
@@ -38,28 +27,28 @@ export class AppComponent {
         });
     }
 
-    /*
-    onConnect() {
-        this.webSocket = new WebSocket(this.uri);
+    openDialog() {
+        this.dialog.closeAll();
+        const dialogRef = this.dialog.open(UriDialogComponent, {
+            width: '700px',
+            disableClose: true,
+            data: {uri: this.defaultUri}
+        });
 
-        this.webSocket.onopen = (ev) => {
-            this.log += 'Websocket connected\n';
-        };
-        this.webSocket.onmessage = (ev) => {
-            this.log += ev.data + '\n';
-        };
-        this.webSocket.onerror = (ev) => {
-            this.log += 'Error\n';
-        };
-        this.webSocket.onclose = (ev) => {
-            this.log += 'Websocket closed\n';
-        };
+        dialogRef.afterClosed().subscribe(data => {
+            this.messageReceiver();
+            localStorage.setItem('uri', data.uri);
+            localStorage.setItem('username', data.username);
+            const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
+            this.snackBar.open(snackBarMessage, 'Nice', {
+                duration: 4000,
+            });
+        });
     }
 
     onSubmit() {
-        if (this.webSocket != null) {
-            this.webSocket.send(this.inputMessage);
-        }
+
     }
-    */
+
+
 }

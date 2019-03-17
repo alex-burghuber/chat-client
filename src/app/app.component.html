@@ -1,6 +1,6 @@
 <app-header (menuOpened)="sidenav.opened=$event"></app-header>
 <mat-sidenav-container id="sidenav-container">
-    <mat-sidenav #sidenav mode="side" role="navigation">
+    <mat-sidenav #sidenav opened mode="side" role="navigation" id="sidenav-list">
         <mat-nav-list>
             <a mat-list-item>
                 <mat-icon class="mr-2">chat</mat-icon>
@@ -14,16 +14,9 @@
                 <mat-icon class="mr-2">person</mat-icon>
                 Chat 2
             </a>
-            <a mat-list-item>
-                <mat-icon class="m-auto">add</mat-icon>
-            </a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content style="overflow-x: hidden">
-        <mat-form-field class="mx-2 mt-2" id="uri-input">
-            <input matInput placeholder="URI" [value]="uri">
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="onConnect()">Connect</button>
         <div class="row m-2">
             <label>
                 <textarea cols="75" rows="20">{{log}}</textarea>
