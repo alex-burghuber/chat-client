@@ -43,7 +43,7 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
         MatDialogModule,
         MatProgressSpinnerModule,
         MatSnackBarModule,
-        MatTabsModule
+        MatTabsModule,
     ],
     entryComponents: [
         UriDialogComponent

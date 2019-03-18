@@ -9,13 +9,13 @@
                               diameter="30">
         </mat-progress-spinner>
         <button mat-raised-button color="primary" [disabled]="isConnected"
-                [style.margin-left]="!buttonWasClicked ? 'auto' : 'unset'" (click)="connect()">Connect
+                [style.margin-left]="!buttonWasClicked ? 'auto' : 'unset'" (click)="onConnect()">Connect
         </button>
     </div>
     <div *ngIf="isConnected">
         <mat-tab-group [(selectedIndex)]="tabGroupIndex" dynamicHeight>
             <mat-tab label="Login">
-                <form (ngSubmit)="onLogin()">
+                <form (ngSubmit)="onLogin()" class="mt-3">
                     <p>
                         <mat-form-field>
                             <input matInput placeholder="Username" type="text" name="username" autocomplete="off">
@@ -26,30 +26,36 @@
                             <input matInput placeholder="Password" type="password" name="password">
                         </mat-form-field>
                     </p>
+                    <button mat-raised-button class="m-2" color="primary" type="submit">Login</button>
                 </form>
             </mat-tab>
             <mat-tab label="Register">
-                <form (ngSubmit)="onRegister()">
+                <form (ngSubmit)="onRegister()" class="mt-3">
                     <p>
                         <mat-form-field>
-                            <input matInput placeholder="Username" type="text" name="username" autocomplete="off">
+                            <input matInput placeholder="Username" type="text" [(ngModel)]="username" name="username"
+                                   autocomplete="off">
                         </mat-form-field>
                     </p>
                     <p>
                         <mat-form-field>
-                            <input matInput placeholder="Password" type="password" name="password">
+                            <input matInput placeholder="Password" type="password" [(ngModel)]="password"
+                                   name="password">
                         </mat-form-field>
                     </p>
                     <p>
                         <mat-form-field>
-                            <input matInput placeholder="Repeat Password" type="password" name="repeatPassword">
+                            <input matInput placeholder="Repeat Password" type="password" [(ngModel)]="repeatPassword"
+                                   name="repeatPassword">
                         </mat-form-field>
                     </p>
+                    <button mat-raised-button class="m-2" color="primary" type="submit">Register</button>
                 </form>
             </mat-tab>
         </mat-tab-group>
     </div>
 </div>
+<!--
 <div mat-dialog-actions *ngIf="isConnected" align="end">
     <button mat-raised-button color="primary" [innerHTML]="tabGroupIndex === 0 ? 'Login' : 'Register'"></button>
-</div>
+</div>-->

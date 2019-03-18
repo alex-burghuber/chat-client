@@ -12,11 +12,11 @@ export class UriDialogComponent implements OnInit {
 
     buttonWasClicked = false;
     connectionFailed = false;
+    isConnected = false;
+    tabGroupIndex = 0;
     username: string;
     password: string;
     repeatPassword: string;
-    isConnected = false;
-    tabGroupIndex = 0;
 
     constructor(public dialogRef: MatDialogRef<UriDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -34,16 +34,28 @@ export class UriDialogComponent implements OnInit {
             }
             this.buttonWasClicked = false;
         });
+        this.webSocketService.messageReceiver.subscribe(data => {
+
+
+        });
     }
 
-    connect() {
+    onConnect() {
         this.buttonWasClicked = true;
-        this.webSocketService.connectHandler(this.data.uri, this.data.username);
-    }
-
-    onLogin() {
+        this.webSocketService.connectHandler(this.data.uri);
     }
 
     onRegister() {
+        // TODO: Validation
+        const jsonString = '{ "auth": { "action": "register", "username": "' + this.username + '", "password": "' + this.password + '"} }';
+        this.webSocketService.sendMessage(jsonString);
     }
+
+    onLogin() {
+        // TODO: Validation
+        const jsonString = '{ "auth": { "action": "login", "username": "' + this.username + '", "password": "' + this.password + '"} }';
+        this.webSocketService.sendMessage(jsonString);
+        this.dialogRef.close(this.data);
+    }
+
 }

@@ -16,15 +16,12 @@ export class WebSocketService {
     constructor() {
     }
 
-    connectHandler(uri: string, username: string) {
-
+    connectHandler(uri: string) {
         this.webSocket = new WebSocket(uri);
-
         this.webSocket.onopen = () => {
             console.log('onopen');
             this.connectionReceiver.emit(true);
         };
-
         this.webSocket.onclose = () => {
             console.log('onclose');
             this.connectionReceiver.emit(false);
@@ -34,11 +31,17 @@ export class WebSocketService {
     messageHandler() {
         this.webSocket.onmessage = (ev) => {
             console.log('onmessage');
-            this.messageReceiver.emit(ev.data + '\n');
+            const json = JSON.parse(ev.data);
+            this.messageReceiver.emit(json);
         };
         this.webSocket.onerror = (ev) => {
             console.log('onerror');
             this.messageReceiver.emit('Error\n');
         };
+    }
+
+    sendMessage(data: string) {
+        console.log(data);
+        this.webSocket.send(data);
     }
 }
