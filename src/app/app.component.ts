@@ -22,7 +22,7 @@ export class AppComponent {
 
     messageReceiver() {
         this.webSocketService.messageHandler();
-        this.webSocketService.messageReceiver.subscribe(data => {
+        this.webSocketService.messageEmitter.subscribe(data => {
             this.log += data;
         });
     }
@@ -49,6 +49,5 @@ export class AppComponent {
     onSubmit() {
 
     }
-
 
 }

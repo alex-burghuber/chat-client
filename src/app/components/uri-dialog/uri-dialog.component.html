@@ -4,16 +4,16 @@
         <mat-form-field style="width: 60%">
             <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="data.uri" type="url">
         </mat-form-field>
-        <mat-label *ngIf="connectionFailed && !buttonWasClicked" style="margin-left: auto">Connection failed</mat-label>
-        <mat-progress-spinner *ngIf="buttonWasClicked" style="margin-left: auto;" class="mr-2" mode="indeterminate"
+        <mat-label *ngIf="connectionFailed && !buttonClicked" style="margin-left: auto">Connection failed</mat-label>
+        <mat-progress-spinner *ngIf="buttonClicked" style="margin-left: auto;" class="mr-2" mode="indeterminate"
                               diameter="30">
         </mat-progress-spinner>
         <button mat-raised-button color="primary" [disabled]="isConnected"
-                [style.margin-left]="!buttonWasClicked ? 'auto' : 'unset'" (click)="onConnect()">Connect
+                [style.margin-left]="!buttonClicked ? 'auto' : 'unset'" (click)="onConnect()">Connect
         </button>
     </div>
     <div *ngIf="isConnected">
-        <mat-tab-group [(selectedIndex)]="tabGroupIndex" dynamicHeight>
+        <mat-tab-group [(selectedIndex)]="matTabIndex" dynamicHeight>
             <mat-tab label="Login">
                 <form (ngSubmit)="onLogin()" class="mt-3">
                     <p>
@@ -27,6 +27,7 @@
                         </mat-form-field>
                     </p>
                     <button mat-raised-button class="m-2" color="primary" type="submit">Login</button>
+                    <mat-label [(ngModel)]="loginStatus"></mat-label>
                 </form>
             </mat-tab>
             <mat-tab label="Register">
@@ -50,12 +51,9 @@
                         </mat-form-field>
                     </p>
                     <button mat-raised-button class="m-2" color="primary" type="submit">Register</button>
+                    <mat-label [(ngModel)]="registerStatus"></mat-label>
                 </form>
             </mat-tab>
         </mat-tab-group>
     </div>
 </div>
-<!--
-<div mat-dialog-actions *ngIf="isConnected" align="end">
-    <button mat-raised-button color="primary" [innerHTML]="tabGroupIndex === 0 ? 'Login' : 'Register'"></button>
-</div>-->
