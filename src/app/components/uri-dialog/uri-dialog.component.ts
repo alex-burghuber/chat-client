@@ -2,7 +2,8 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {DialogData} from '../../interfaces/DialogData';
 import {WebSocketService} from '../../web-socket.service';
-import {StatusMessage} from '../objects/StatusMessage';
+import {StatusMessage} from '../../objects/StatusMessage';
+import {AuthMessage} from '../../objects/AuthMessage';
 
 @Component({
     selector: 'app-uri-dialog',
@@ -11,33 +12,33 @@ import {StatusMessage} from '../objects/StatusMessage';
 })
 export class UriDialogComponent implements OnInit {
 
-    buttonClicked = false;
-    connectionFailed = false;
-    isConnected = false;
-    username: string;
-    password: string;
-    repeatPassword: string;
     loginStatus: string;
     registerStatus: string;
     matTabIndex: number;
 
+    // Form fields
+    username: string;
+    password: string;
+    repeatPassword: string;
+
+    // UX fields
+    isConnecting = false;
+    isConnected = false;
+    hasTriedToConnect = false;
+    passwordsUnequal: boolean;
+
     constructor(public dialogRef: MatDialogRef<UriDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: DialogData,
-                public webSocketService: WebSocketService) {
+                public wsService: WebSocketService) {
     }
 
     ngOnInit(): void {
-        this.webSocketService.connectionEmitter.subscribe(result => {
-            if (result) {
-                console.log('connected');
-                this.isConnected = true;
-            } else {
-                console.log('connection failed');
-                this.connectionFailed = true;
-            }
-            this.buttonClicked = false;
+        this.wsService.connectionEmitter.subscribe(wsIsConnected => {
+            this.isConnected = wsIsConnected;
+            this.isConnecting = false;
+            console.log(wsIsConnected ? 'connected' : 'connection failed');
         });
-        this.webSocketService.messageEmitter.subscribe(message => {
+        this.wsService.messageEmitter.subscribe(message => {
             if (message instanceof StatusMessage) {
                 if (message.kind === 'register') {
                     if (message.isSuccess) {
@@ -59,21 +60,26 @@ export class UriDialogComponent implements OnInit {
     }
 
     onConnect() {
-        this.buttonClicked = true;
-        this.webSocketService.connectHandler(this.data.uri);
+        if (this.isConnected) {
+            this.wsService.disconnect();
+        } else {
+            this.isConnecting = true;
+            this.hasTriedToConnect = true;
+            this.wsService.connectionHandler(this.data.uri);
+        }
     }
 
     onRegister() {
-        // TODO: Validation
-        const jsonString = '{ "auth": { "action": "register", "username": "' + this.username + '", "password": "' + this.password + '"} }';
-        this.webSocketService.send(jsonString);
+        if (this.password === this.repeatPassword) {
+            this.passwordsUnequal = false;
+            const authMessage = new AuthMessage('auth', 'register', this.username, this.password);
+            this.wsService.send(authMessage);
+        } else {
+            this.passwordsUnequal = true;
+        }
     }
 
     onLogin() {
-        // TODO: Validation
-        const jsonString = '{ "auth": { "action": "login", "username": "' + this.username + '", "password": "' + this.password + '"} }';
-        this.webSocketService.send(jsonString);
-        this.dialogRef.close(this.data);
     }
 
 }

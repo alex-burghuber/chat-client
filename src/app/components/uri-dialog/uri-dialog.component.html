@@ -1,58 +1,49 @@
 <h1 mat-dialog-title>Hello there!</h1>
 <div mat-dialog-content>
-    <div id="wrapper">
+    <div style="display: flex; align-items: center;">
         <mat-form-field style="width: 60%">
             <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="data.uri" type="url">
         </mat-form-field>
-        <mat-label *ngIf="connectionFailed && !buttonClicked" style="margin-left: auto">Connection failed</mat-label>
-        <mat-progress-spinner *ngIf="buttonClicked" style="margin-left: auto;" class="mr-2" mode="indeterminate"
-                              diameter="30">
+        <mat-label *ngIf="!isConnecting && !isConnected && hasTriedToConnect" style="margin-left: auto">
+            No connection
+        </mat-label>
+        <mat-progress-spinner *ngIf="isConnecting" style="margin-left: auto;" class="mr-2"
+                              mode="indeterminate" diameter="30">
         </mat-progress-spinner>
-        <button mat-raised-button color="primary" [disabled]="isConnected"
-                [style.margin-left]="!buttonClicked ? 'auto' : 'unset'" (click)="onConnect()">Connect
+        <button mat-stroked-button color="primary" [innerHTML]="isConnected ? 'Disconnect' : 'Connect'"
+                [style.margin-left]="!isConnecting ? 'auto' : 'unset'" (click)="onConnect()">
+            Connect
         </button>
     </div>
     <div *ngIf="isConnected">
         <mat-tab-group [(selectedIndex)]="matTabIndex" dynamicHeight>
-            <mat-tab label="Login">
-                <form (ngSubmit)="onLogin()" class="mt-3">
+            <mat-tab label="Register">
+                <form (ngSubmit)="onRegister()">
                     <p>
                         <mat-form-field>
-                            <input matInput placeholder="Username" type="text" name="username" autocomplete="off">
+                            <input matInput type="text" [(ngModel)]="username"
+                                   placeholder="Username" autocomplete="off" name="username">
                         </mat-form-field>
                     </p>
                     <p>
                         <mat-form-field>
-                            <input matInput placeholder="Password" type="password" name="password">
+                            <input matInput type="password" [(ngModel)]="password"
+                                   placeholder="Password" name="password">
                         </mat-form-field>
                     </p>
-                    <button mat-raised-button class="m-2" color="primary" type="submit">Login</button>
-                    <mat-label [(ngModel)]="loginStatus"></mat-label>
+                    <p>
+                        <mat-form-field>
+                            <input matInput type="password" [(ngModel)]="repeatPassword"
+                                   placeholder="Repeat Password" name="repeatPassword">
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <button mat-raised-button type="submit" color="primary">Register</button>
+                        <mat-label *ngIf="passwordsUnequal" class="ml-2">Passwords do not match</mat-label>
+                    </p>
                 </form>
             </mat-tab>
-            <mat-tab label="Register">
-                <form (ngSubmit)="onRegister()" class="mt-3">
-                    <p>
-                        <mat-form-field>
-                            <input matInput placeholder="Username" type="text" [(ngModel)]="username" name="username"
-                                   autocomplete="off">
-                        </mat-form-field>
-                    </p>
-                    <p>
-                        <mat-form-field>
-                            <input matInput placeholder="Password" type="password" [(ngModel)]="password"
-                                   name="password">
-                        </mat-form-field>
-                    </p>
-                    <p>
-                        <mat-form-field>
-                            <input matInput placeholder="Repeat Password" type="password" [(ngModel)]="repeatPassword"
-                                   name="repeatPassword">
-                        </mat-form-field>
-                    </p>
-                    <button mat-raised-button class="m-2" color="primary" type="submit">Register</button>
-                    <mat-label [(ngModel)]="registerStatus"></mat-label>
-                </form>
+            <mat-tab label="Login">
             </mat-tab>
         </mat-tab-group>
     </div>

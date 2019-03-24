@@ -1,14 +1,14 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {Message} from './components/objects/Message';
-import {ChatMessage} from './components/objects/ChatMessage';
-import {StatusMessage} from './components/objects/StatusMessage';
+import {Message} from './objects/Message';
+import {ChatMessage} from './objects/ChatMessage';
+import {StatusMessage} from './objects/StatusMessage';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WebSocketService {
 
-    public webSocket: WebSocket;
+    private webSocket: WebSocket;
 
     @Output()
     messageEmitter: EventEmitter<Message> = new EventEmitter(true);
@@ -19,7 +19,7 @@ export class WebSocketService {
     constructor() {
     }
 
-    connectHandler(uri: string) {
+    connectionHandler(uri: string) {
         this.webSocket = new WebSocket(uri);
         this.webSocket.onopen = () => {
             console.log('onopen');
@@ -31,7 +31,7 @@ export class WebSocketService {
         };
         this.webSocket.onerror = (ev) => {
             console.log('onerror');
-            this.connectionEmitter.emit(false);
+            // this.connectionEmitter.emit(false);
         };
     }
 
@@ -52,8 +52,20 @@ export class WebSocketService {
         };
     }
 
-    send(data: string) {
-        console.log(data);
-        this.webSocket.send(data);
+    disconnect() {
+        this.webSocket.close();
     }
+
+    send(message: Message) {
+        let jsonString = JSON.stringify(message, (key, value) => {
+            if (key === 'type') {
+                value = undefined;
+            }
+            return value;
+        });
+        jsonString = '{ "' + message.type + '": ' + jsonString + ' }';
+        console.log('Sent: ' + jsonString);
+        this.webSocket.send(jsonString);
+    }
+
 }

@@ -1,7 +1,7 @@
 import {Message} from './Message';
 
 export class StatusMessage extends Message {
-    constructor(type: string,
+    constructor(public type: string,
                 public isSuccess: boolean,
                 public kind: string,
                 public content: string) {

@@ -7,6 +7,7 @@ import {
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
@@ -19,7 +20,7 @@ import {
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
 
 @NgModule({
@@ -33,6 +34,7 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
         AppRoutingModule,
         FormsModule,
         BrowserAnimationsModule,
+        ReactiveFormsModule,
         MatButtonModule,
         MatToolbarModule,
         MatCardModule,
@@ -44,6 +46,7 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
         MatProgressSpinnerModule,
         MatSnackBarModule,
         MatTabsModule,
+        MatFormFieldModule
     ],
     entryComponents: [
         UriDialogComponent
