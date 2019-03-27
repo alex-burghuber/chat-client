@@ -1,5 +1,6 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Message} from './objects/Message';
+import {AuthMessage} from './objects/AuthMessage';
 
 @Injectable({
     providedIn: 'root'
@@ -9,40 +10,46 @@ export class WebSocketService {
     private webSocket: WebSocket;
 
     @Output()
-    messageEmitter: EventEmitter<Message> = new EventEmitter(true);
-
-    @Output()
     connectionEmitter: EventEmitter<boolean> = new EventEmitter(true);
 
+    @Output()
+    messageEmitter: EventEmitter<Message> = new EventEmitter(true);
+
     constructor() {
-        this.webSocket.onmessage = this.onmessage;
     }
 
-    connectionHandler(uri: string) {
+    connect(uri: string) {
         this.webSocket = new WebSocket(uri);
-        this.webSocket.onopen = () => {
-            console.log('onopen');
-            this.connectionEmitter.emit(true);
-        };
-        this.webSocket.onclose = () => {
-            console.log('onclose');
-            this.connectionEmitter.emit(false);
-        };
-        this.webSocket.onerror = (ev) => {
-            console.log('onerror');
-            // this.connectionEmitter.emit(false);
-        };
-    }
-
-    onmessage(ev) {
-        console.log('onmessage');
-        const message: Message = JSON.parse(ev.data);
-        console.log('Received: ' + message);
-        this.messageEmitter.emit(message);
+        this.webSocket.onopen = () => this.onOpen();
+        this.webSocket.onclose = (ev) => this.onClose(ev);
+        this.webSocket.onmessage = (ev) => this.onMessage(ev);
+        this.webSocket.onerror = (ev) => this.onError(ev);
     }
 
     disconnect() {
         this.webSocket.close();
+    }
+
+    onOpen() {
+        console.log('onopen');
+        this.connectionEmitter.emit(true);
+    }
+
+    onClose(ev) {
+        console.log('onclose' + ev);
+        this.connectionEmitter.emit(false);
+    }
+
+    onMessage(ev) {
+        console.log('onmessage');
+        console.log('Received:' + ev.data);
+        const message: Message = <Message>JSON.parse(ev.data);
+        this.messageEmitter.emit(message);
+    }
+
+    onError(ev) {
+        console.log('onerror' + ev);
+        // this.connectionEmitter.emit(false);
     }
 
     send(message: Message) {
@@ -52,7 +59,12 @@ export class WebSocketService {
             }
             return value;
         });
-        jsonString = '{ "' + message.type + '": ' + jsonString + ' }';
+
+        let type = '';
+        if (message instanceof AuthMessage) {
+            type = 'auth';
+        }
+        jsonString = '{ "' + type + '": ' + jsonString + ' }';
         console.log('Sent: ' + jsonString);
         this.webSocket.send(jsonString);
     }

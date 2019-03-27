@@ -21,7 +21,6 @@ export class AppComponent {
     }
 
     messageReceiver() {
-        this.webSocketService.messageHandler();
         this.webSocketService.messageEmitter.subscribe(data => {
             this.log += data;
         });
@@ -34,11 +33,7 @@ export class AppComponent {
             disableClose: true,
             data: {uri: this.defaultUri}
         });
-
         dialogRef.afterClosed().subscribe(data => {
-            this.messageReceiver();
-            localStorage.setItem('uri', data.uri);
-            localStorage.setItem('username', data.username);
             const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
             this.snackBar.open(snackBarMessage, 'Nice', {
                 duration: 4000,

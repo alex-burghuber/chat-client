@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {DialogData} from '../../interfaces/DialogData';
 import {WebSocketService} from '../../web-socket.service';
-import {StatusMessage} from '../../objects/StatusMessage';
 import {AuthMessage} from '../../objects/AuthMessage';
 
 @Component({
@@ -33,39 +32,35 @@ export class UriDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.wsService.connectionEmitter.subscribe(wsIsConnected => {
-            this.isConnected = wsIsConnected;
+        this.wsService.connectionEmitter.subscribe(isConnected => {
+            this.isConnected = isConnected;
             this.isConnecting = false;
-            console.log(wsIsConnected ? 'connected' : 'connection failed');
+            console.log(isConnected ? 'connected' : 'connection failed');
         });
         this.wsService.messageEmitter.subscribe(message => {
-            if (message instanceof StatusMessage) {
+            if (message.type === 'status') {
                 if (message.kind === 'register') {
-                    if (message.isSuccess) {
-                        this.registerStatus = 'Successfully registered';
-                        this.matTabIndex = 0;
-                    } else {
-                        this.loginStatus = message.content;
-                    }
+                    this.registerStatus = message.content;
+                    console.log(message.isSuccess ? 'Success' : 'Error');
                 } else if (message.kind === 'login') {
-                    if (message.isSuccess) {
-                        this.loginStatus = 'Successfully logged in';
-                        // TODO: Redirect
-                    } else {
-                        this.loginStatus = message.content;
+                    this.loginStatus = message.content;
+                    if (message.isSuccess === true) {
+                        this.data.username = this.username;
                     }
+                    console.log(message.isSuccess ? 'Success' : 'Error');
+                    this.dialogRef.close(this.data);
                 }
             }
         });
     }
 
     onConnect() {
-        if (this.isConnected) {
-            this.wsService.disconnect();
-        } else {
+        if (!this.isConnected) {
             this.isConnecting = true;
             this.hasTriedToConnect = true;
-            this.wsService.connectionHandler(this.data.uri);
+            this.wsService.connect(this.data.uri);
+        } else {
+            this.wsService.disconnect();
         }
     }
 
@@ -80,6 +75,8 @@ export class UriDialogComponent implements OnInit {
     }
 
     onLogin() {
+        const authMessage = new AuthMessage('auth', 'login', this.username, this.password);
+        this.wsService.send(authMessage);
     }
 
 }

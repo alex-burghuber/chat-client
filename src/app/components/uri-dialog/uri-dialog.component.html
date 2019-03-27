@@ -37,13 +37,31 @@
                                    placeholder="Repeat Password" name="repeatPassword">
                         </mat-form-field>
                     </p>
-                    <p>
+                    <div class="p-2">
                         <button mat-raised-button type="submit" color="primary">Register</button>
-                        <mat-label *ngIf="passwordsUnequal" class="ml-2">Passwords do not match</mat-label>
-                    </p>
+                        <mat-label class="ml-2" [innerHTML]="registerStatus"></mat-label>
+                    </div>
                 </form>
             </mat-tab>
             <mat-tab label="Login">
+                <form (ngSubmit)="onLogin()">
+                    <p>
+                        <mat-form-field>
+                            <input matInput type="text" [(ngModel)]="username"
+                                   placeholder="Username" autocomplete="off" name="username">
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field>
+                            <input matInput type="password" [(ngModel)]="password"
+                                   placeholder="Password" name="password">
+                        </mat-form-field>
+                    </p>
+                    <div class="p-2">
+                        <button mat-raised-button type="submit" color="primary">Login</button>
+                        <mat-label class="ml-2" [innerHTML]="loginStatus"></mat-label>
+                    </div>
+                </form>
             </mat-tab>
         </mat-tab-group>
     </div>
