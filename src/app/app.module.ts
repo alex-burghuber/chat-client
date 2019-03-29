@@ -8,6 +8,7 @@ import {
     MatCardModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
@@ -46,7 +47,8 @@ import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
         MatProgressSpinnerModule,
         MatSnackBarModule,
         MatTabsModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatGridListModule
     ],
     entryComponents: [
         UriDialogComponent

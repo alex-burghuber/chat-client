@@ -11,32 +11,28 @@ import {WebSocketService} from './web-socket.service';
 })
 export class AppComponent {
 
-    defaultUri = 'ws://localhost:8025/websockets/chat';
     log = '';
     inputMessage = '';
 
-    constructor(private webSocketService: WebSocketService, private router: Router,
+    constructor(private wsService: WebSocketService, private router: Router,
                 private dialog: MatDialog, private snackBar: MatSnackBar) {
         this.openDialog();
-    }
-
-    messageReceiver() {
-        this.webSocketService.messageEmitter.subscribe(data => {
-            this.log += data;
-        });
     }
 
     openDialog() {
         this.dialog.closeAll();
         const dialogRef = this.dialog.open(UriDialogComponent, {
-            width: '700px',
+            minWidth: '40%',
             disableClose: true,
-            data: {uri: this.defaultUri}
+            data: {}
         });
         dialogRef.afterClosed().subscribe(data => {
+            localStorage.setItem('uri', data.uri);
+            localStorage.setItem('username', data.username);
+            localStorage.setItem('password', data.password);
             const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
             this.snackBar.open(snackBarMessage, 'Nice', {
-                duration: 4000,
+                duration: 6000,
             });
         });
     }

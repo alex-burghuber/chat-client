@@ -11,44 +11,79 @@ import {AuthMessage} from '../../objects/AuthMessage';
 })
 export class UriDialogComponent implements OnInit {
 
+    // response fields
     loginStatus: string;
     registerStatus: string;
-    matTabIndex: number;
 
-    // Form fields
-    username: string;
-    password: string;
-    repeatPassword: string;
+    // form fields
+    uri = 'ws://localhost:8025/websockets/chat';
+    username = '';
+    password = '';
+    repeatPassword = '';
 
     // UX fields
-    isConnecting = false;
+    isLoading = false;
     isConnected = false;
     hasTriedToConnect = false;
     passwordsUnequal: boolean;
 
+    matTabIndex: number;
+    isReloadConnect: boolean;
+
     constructor(public dialogRef: MatDialogRef<UriDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: DialogData,
                 public wsService: WebSocketService) {
+        // reconnect if the page was reloaded
+        const uri = localStorage.getItem('uri');
+        if (uri !== null) {
+            this.uri = uri;
+            this.isReloadConnect = true;
+            this.onConnect();
+        }
     }
 
     ngOnInit(): void {
         this.wsService.connectionEmitter.subscribe(isConnected => {
-            this.isConnected = isConnected;
-            this.isConnecting = false;
             console.log(isConnected ? 'connected' : 'connection failed');
+            if (this.isReloadConnect && isConnected) {
+                // re login if the page was reloaded
+                const username = localStorage.getItem('username');
+                const password = localStorage.getItem('password');
+                if (username !== null && password !== null) {
+                    this.username = username;
+                    this.password = password;
+                    this.onLogin();
+                }
+            } else {
+                // connection attempt failed
+                this.isConnected = isConnected;
+                this.isLoading = false;
+            }
         });
         this.wsService.messageEmitter.subscribe(message => {
+            console.log(message.type + ' message: ' + (message.success ? 'Success' : 'Error'));
             if (message.type === 'status') {
                 if (message.kind === 'register') {
+                    this.isLoading = false;
                     this.registerStatus = message.content;
-                    console.log(message.isSuccess ? 'Success' : 'Error');
+                    if (message.success === true) {
+                        setTimeout(() => {
+                            this.matTabIndex = 1;
+                        }, 1000);
+                    }
                 } else if (message.kind === 'login') {
                     this.loginStatus = message.content;
-                    if (message.isSuccess === true) {
+                    if (message.success === true) {
+                        this.data.uri = this.uri;
                         this.data.username = this.username;
+                        this.data.password = this.password;
+                        setTimeout(() => {
+                            this.dialogRef.close(this.data);
+                        }, 1000);
+                    } else if (this.isReloadConnect) {
+                        this.isReloadConnect = false;
+                        localStorage.clear();
                     }
-                    console.log(message.isSuccess ? 'Success' : 'Error');
-                    this.dialogRef.close(this.data);
                 }
             }
         });
@@ -56,27 +91,32 @@ export class UriDialogComponent implements OnInit {
 
     onConnect() {
         if (!this.isConnected) {
-            this.isConnecting = true;
+            this.isLoading = true;
             this.hasTriedToConnect = true;
-            this.wsService.connect(this.data.uri);
+            this.wsService.connect(this.uri);
         } else {
             this.wsService.disconnect();
         }
     }
 
     onRegister() {
-        if (this.password === this.repeatPassword) {
-            this.passwordsUnequal = false;
-            const authMessage = new AuthMessage('auth', 'register', this.username, this.password);
-            this.wsService.send(authMessage);
-        } else {
-            this.passwordsUnequal = true;
+        if (this.username !== '' && this.password !== '' && this.repeatPassword !== '') {
+            if (this.password === this.repeatPassword) {
+                this.passwordsUnequal = false;
+                this.isLoading = true;
+                const authMessage = new AuthMessage('auth', 'register', this.username, this.password);
+                this.wsService.send(authMessage);
+            } else {
+                this.passwordsUnequal = true;
+            }
         }
     }
 
     onLogin() {
-        const authMessage = new AuthMessage('auth', 'login', this.username, this.password);
-        this.wsService.send(authMessage);
+        if (this.username !== '' && this.password !== '') {
+            const authMessage = new AuthMessage('auth', 'login', this.username, this.password);
+            this.wsService.send(authMessage);
+        }
     }
 
 }
