@@ -79,7 +79,7 @@ export class UriDialogComponent implements OnInit {
                         this.data.password = this.password;
                         setTimeout(() => {
                             this.dialogRef.close(this.data);
-                        }, 1000);
+                        }, (this.isReloadConnect ? 0 : 500));
                     } else if (this.isReloadConnect) {
                         this.isReloadConnect = false;
                         localStorage.clear();

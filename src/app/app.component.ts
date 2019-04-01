@@ -14,8 +14,10 @@ export class AppComponent {
     log = '';
     inputMessage = '';
 
-    constructor(private wsService: WebSocketService, private router: Router,
-                private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private wsService: WebSocketService,
+                private router: Router,
+                private dialog: MatDialog,
+                private snackBar: MatSnackBar) {
         this.openDialog();
     }
 
@@ -27,18 +29,18 @@ export class AppComponent {
             data: {}
         });
         dialogRef.afterClosed().subscribe(data => {
+            // save the data for auto reconnect + login on reload
             localStorage.setItem('uri', data.uri);
             localStorage.setItem('username', data.username);
             localStorage.setItem('password', data.password);
             const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
             this.snackBar.open(snackBarMessage, 'Nice', {
-                duration: 6000,
+                duration: 6000
             });
         });
     }
 
     onSubmit() {
-
     }
 
 }

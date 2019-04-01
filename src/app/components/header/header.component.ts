@@ -17,4 +17,7 @@ export class HeaderComponent {
         this.menuOpened.emit(this.isOpen);
         this.isOpen = !this.isOpen;
     }
+
+    onDisconnect() {
+    }
 }
