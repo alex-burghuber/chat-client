@@ -14,26 +14,15 @@
                 <mat-icon class="mr-2">person</mat-icon>
                 Chat 2
             </a>
+            <a mat-list-item (click)="onNewChat()">
+                <mat-icon style="margin: 0 auto">
+                    add
+                </mat-icon>
+            </a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content style="overflow-x: hidden">
-        <div class="row m-2">
-            <label>
-                <textarea cols="75" rows="20">{{log}}</textarea>
-            </label>
-        </div>
-        <mat-card class="ml-2 mr-2" id="chat-input">
-            <mat-card-content>
-                <form (ngSubmit)="onSubmit()">
-                    <button mat-raised-button color="primary" type="submit">Send</button>
-                    <mat-form-field class="ml-3">
-                        <input matInput #message name="message" maxlength="128" placeholder="Message"
-                               [(ngModel)]="inputMessage">
-                        <mat-hint>{{message.value.length}} / {{message.maxLength}}</mat-hint>
-                    </mat-form-field>
-                </form>
-            </mat-card-content>
-        </mat-card>
+        <app-chat></app-chat>
     </mat-sidenav-content>
 </mat-sidenav-container>
 <router-outlet></router-outlet>

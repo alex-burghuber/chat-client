@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatDialog, MatSnackBar} from '@angular/material';
+import {MatBottomSheet, MatDialog, MatSnackBar} from '@angular/material';
 import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
 import {WebSocketService} from './web-socket.service';
+import {NewChatBottomSheetComponent} from './components/new-chat-bottom-sheet/new-chat-bottom-sheet.component';
 
 @Component({
     selector: 'app-root',
@@ -17,7 +18,8 @@ export class AppComponent {
     constructor(private wsService: WebSocketService,
                 private router: Router,
                 private dialog: MatDialog,
-                private snackBar: MatSnackBar) {
+                private snackBar: MatSnackBar,
+                private bottomSheet: MatBottomSheet) {
         this.openDialog();
     }
 
@@ -43,4 +45,9 @@ export class AppComponent {
     onSubmit() {
     }
 
+    onNewChat() {
+        const bottomSheetRef = this.bottomSheet.open(NewChatBottomSheetComponent, {
+            data: {}
+        });
+    }
 }
