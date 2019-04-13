@@ -3,7 +3,6 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
-    MAT_BOTTOM_SHEET_DEFAULT_OPTIONS,
     MAT_DIALOG_DEFAULT_OPTIONS,
     MatBottomSheetModule,
     MatButtonModule,
@@ -24,17 +23,17 @@ import {
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {UriDialogComponent} from './components/uri-dialog/uri-dialog.component';
+import {AuthDialogComponent} from './components/auth-dialog/auth-dialog.component';
 import {ChatComponent} from './components/chat/chat.component';
-import {NewChatBottomSheetComponent} from './components/new-chat-bottom-sheet/new-chat-bottom-sheet.component';
+import {AddChatDialogComponent} from './components/add-chat-dialog/add-chat-dialog.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HeaderComponent,
-        UriDialogComponent,
+        AuthDialogComponent,
         ChatComponent,
-        NewChatBottomSheetComponent
+        AddChatDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -58,12 +57,11 @@ import {NewChatBottomSheetComponent} from './components/new-chat-bottom-sheet/ne
         MatBottomSheetModule
     ],
     entryComponents: [
-        UriDialogComponent,
-        NewChatBottomSheetComponent
+        AuthDialogComponent,
+        AddChatDialogComponent
     ],
     providers: [
-        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},
-        {provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
     ],
     bootstrap: [AppComponent]
 })

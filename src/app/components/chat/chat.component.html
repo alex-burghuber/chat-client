@@ -1,27 +1,19 @@
 <div class="container-fluid" style="background-color: whitesmoke">
     <div class="row">
-        <mat-toolbar style="background-color: white;">
-            <span class="ml-2">Karl</span>
+        <mat-toolbar style="background-color: white">
+            <span class="ml-2">{{ chat.user }}</span>
         </mat-toolbar>
     </div>
     <div class="row" style="height: 70vh">
         <div class="col-12">
-            <div class="container-fluid">
-                <div class="row my-1">
-                    <mat-card class="col-6">
-                        <mat-card-content>
-                            test
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-                <div class="row my-1">
-                    <mat-card class="col-6">
-                        <mat-card-content>
-                            test
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            </div>
+            <mat-list>
+                <h1 mat-subheader>Chat History</h1>
+                <mat-list-item *ngFor="let message of chat.messages">
+                    <mat-icon mat-list-icon>person</mat-icon>
+                    <p mat-line style="font-size: 0.9em">{{ message.name }}</p>
+                    <p mat-line style="font-size: 1em">{{ message.content }}</p>
+                </mat-list-item>
+            </mat-list>
         </div>
     </div>
     <div class="row" style="height: 25vh">

@@ -1,15 +1,15 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {DialogData} from '../../interfaces/DialogData';
+import {AuthDialogData} from '../../interfaces/AuthDialogData';
 import {WebSocketService} from '../../web-socket.service';
-import {AuthMessage} from '../../objects/AuthMessage';
+import {AuthMessage} from '../../objects/messages/AuthMessage';
 
 @Component({
-    selector: 'app-uri-dialog',
-    templateUrl: './uri-dialog.component.html',
-    styleUrls: ['./uri-dialog.component.scss']
+    selector: 'app-auth-dialog',
+    templateUrl: './auth-dialog.component.html',
+    styleUrls: ['./auth-dialog.component.scss']
 })
-export class UriDialogComponent implements OnInit {
+export class AuthDialogComponent implements OnInit {
 
     // response fields
     loginStatus: string;
@@ -30,11 +30,11 @@ export class UriDialogComponent implements OnInit {
     matTabIndex: number;
     isReloadConnect: boolean;
 
-    constructor(public dialogRef: MatDialogRef<UriDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    constructor(public dialogRef: MatDialogRef<AuthDialogComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: AuthDialogData,
                 public wsService: WebSocketService) {
         // reconnect if the page was reloaded
-        const uri = localStorage.getItem('uri');
+        const uri = sessionStorage.getItem('uri');
         if (uri !== null) {
             this.uri = uri;
             this.isReloadConnect = true;
@@ -47,8 +47,8 @@ export class UriDialogComponent implements OnInit {
             console.log(isConnected ? 'connected' : 'connection failed');
             if (this.isReloadConnect && isConnected) {
                 // re login if the page was reloaded
-                const username = localStorage.getItem('username');
-                const password = localStorage.getItem('password');
+                const username = sessionStorage.getItem('username');
+                const password = sessionStorage.getItem('password');
                 if (username !== null && password !== null) {
                     this.username = username;
                     this.password = password;
@@ -67,9 +67,7 @@ export class UriDialogComponent implements OnInit {
                     this.isLoading = false;
                     this.registerStatus = message.content;
                     if (message.success === true) {
-                        setTimeout(() => {
-                            this.matTabIndex = 1;
-                        }, 1000);
+                        this.matTabIndex = 1;
                     }
                 } else if (message.kind === 'login') {
                     this.loginStatus = message.content;
@@ -77,12 +75,11 @@ export class UriDialogComponent implements OnInit {
                         this.data.uri = this.uri;
                         this.data.username = this.username;
                         this.data.password = this.password;
-                        setTimeout(() => {
-                            this.dialogRef.close(this.data);
-                        }, (this.isReloadConnect ? 0 : 500));
+                        this.dialogRef.close(this.data);
                     } else if (this.isReloadConnect) {
                         this.isReloadConnect = false;
-                        localStorage.clear();
+                        sessionStorage.clear();
+                        this.wsService.disconnect();
                     }
                 }
             }

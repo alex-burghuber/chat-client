@@ -1,6 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {Message} from './objects/Message';
-import {AuthMessage} from './objects/AuthMessage';
+import {Message} from './objects/messages/Message';
 
 @Injectable({
     providedIn: 'root'
@@ -42,9 +41,8 @@ export class WebSocketService {
 
     onMessage(ev) {
         console.log('onmessage');
-        console.log('Received:' + ev.data);
-        const message: Message = <Message>JSON.parse(ev.data);
-        this.messageEmitter.emit(message);
+        console.log('Received: ' + ev.data);
+        this.messageEmitter.emit(<Message>JSON.parse(ev.data));
     }
 
     onError(ev) {
@@ -53,20 +51,9 @@ export class WebSocketService {
     }
 
     send(message: Message) {
-        let jsonString = JSON.stringify(message, (key, value) => {
-            if (key === 'type') {
-                value = undefined;
-            }
-            return value;
-        });
-
-        let type = '';
-        if (message instanceof AuthMessage) {
-            type = 'auth';
-        }
-        jsonString = '{ "' + type + '": ' + jsonString + ' }';
-        console.log('Sent: ' + jsonString);
-        this.webSocket.send(jsonString);
+        const jsonStr = JSON.stringify(message);
+        console.log('Sent: ' + jsonStr);
+        this.webSocket.send(jsonStr);
     }
 
 }
