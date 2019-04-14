@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {AuthDialogComponent} from './components/auth-dialog/auth-dialog.component';
@@ -26,15 +26,45 @@ export class AppComponent {
     ];
 
     selectedChat = this.chats[0];
+    sideNavMode = 'side';
+    sideNavWidth = '15%';
+    sidenavOpened = true;
 
     constructor(private wsService: WebSocketService,
                 private router: Router,
                 private dialog: MatDialog,
                 private snackBar: MatSnackBar) {
-        this.openDialog();
+        // open the authentication dialog
+        this.openAuthDialog();
+        // initial responsive render of the sidenav
+        this.resizeHandler(true);
     }
 
-    openDialog() {
+    /**
+     * Window width event handler for sidenav responsiveness.
+     * @param initial indicates if the method is called from the constructor
+     */
+    @HostListener('window:resize')
+    resizeHandler(initial: boolean) {
+        if (window.innerWidth >= 992) {
+            this.sideNavMode = 'side';
+            this.sideNavWidth = '15%';
+        } else {
+            if (window.innerWidth >= 576) {
+                this.sideNavMode = 'over';
+                this.sideNavWidth = '30%';
+            } else {
+                this.sideNavMode = 'over';
+                this.sideNavWidth = '55%';
+            }
+            if (initial) {
+                // initially close the sidenav if the window width is small. By default the sidenav is opened
+                this.sidenavOpened = false;
+            }
+        }
+    }
+
+    openAuthDialog() {
         this.dialog.closeAll();
         const authDialogRef = this.dialog.open(AuthDialogComponent, {
             minWidth: '40%',
@@ -46,9 +76,10 @@ export class AppComponent {
             sessionStorage.setItem('uri', data.uri);
             sessionStorage.setItem('username', data.username);
             sessionStorage.setItem('password', data.password);
+
             const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
             this.snackBar.open(snackBarMessage, 'Nice', {
-                duration: 6000
+                duration: 2000
             });
         });
     }
@@ -61,12 +92,9 @@ export class AppComponent {
             if (data !== undefined) {
                 const chat = new Chat(data.name);
                 this.chats.push(chat);
-                this.onOpenChat(chat);
+                this.selectedChat = chat;
             }
         });
     }
 
-    onOpenChat(chat: Chat) {
-        this.selectedChat = chat;
-    }
 }

@@ -44,9 +44,10 @@ export class AuthDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.wsService.connectionEmitter.subscribe(isConnected => {
-            console.log(isConnected ? 'connected' : 'connection failed');
-            if (this.isReloadConnect && isConnected) {
-                // re login if the page was reloaded
+            console.log('Auth-Dialog: ' + (isConnected ? 'connected' : 'connection failed'));
+            if (isConnected && this.isReloadConnect) {
+                // re-login if the page was reloaded
+                console.log('re-login...');
                 const username = sessionStorage.getItem('username');
                 const password = sessionStorage.getItem('password');
                 if (username !== null && password !== null) {
@@ -55,7 +56,6 @@ export class AuthDialogComponent implements OnInit {
                     this.onLogin();
                 }
             } else {
-                // connection attempt failed
                 this.isConnected = isConnected;
                 this.isLoading = false;
             }

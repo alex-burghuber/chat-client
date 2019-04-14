@@ -1,10 +1,10 @@
-<div class="container-fluid" style="background-color: whitesmoke">
+<div class="container-fluid" id="container">
     <div class="row">
         <mat-toolbar style="background-color: white">
             <span class="ml-2">{{ chat.user }}</span>
         </mat-toolbar>
     </div>
-    <div class="row" style="height: 70vh">
+    <div class="row">
         <div class="col-12">
             <mat-list>
                 <h1 mat-subheader>Chat History</h1>
@@ -16,20 +16,19 @@
             </mat-list>
         </div>
     </div>
-    <div class="row" style="height: 25vh">
-        <div class="col-12">
-            <mat-card>
-                <mat-card-content>
-                    <form>
-                        <button mat-raised-button color="primary" type="submit">Send</button>
-                        <mat-form-field class="ml-3">
-                            <input matInput #message name="message" maxlength="128" placeholder="Message"
-                                   [(ngModel)]="inputMessage">
-                            <mat-hint>{{message.value.length}} / {{message.maxLength}}</mat-hint>
-                        </mat-form-field>
-                    </form>
-                </mat-card-content>
-            </mat-card>
+    <div class="row" style="position: relative">
+        <div id="messageInput" class="col-xl-6 col-lg-8 col-12 ml-lg-4 mb-lg-4">
+            <button mat-icon-button>
+                <mat-icon style="transform: scale(1.5)">gif</mat-icon>
+            </button>
+            <mat-form-field appearance="standard" style="flex-grow: 1" class="mx-2">
+                <input matInput #input name="message" maxlength="128" placeholder="Message"
+                       [(ngModel)]="inputMessage">
+                <p matSuffix style="font-size: 0.7em">{{ input.value.length }} / {{ input.maxLength }}</p>
+            </mat-form-field>
+            <button mat-icon-button (click)="onSend()">
+                <mat-icon>send</mat-icon>
+            </button>
         </div>
     </div>
 </div>

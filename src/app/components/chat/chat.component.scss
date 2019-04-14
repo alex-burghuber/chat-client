@@ -1,5 +1,18 @@
-@import '~@angular/material/theming';
+#container {
+  height: 100vh;
+  background-color: #f5f5f5;
+}
 
-#chat-header {
-  height: 5vh;
+#messageInput {
+  -webkit-box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.4);
+  background-color: white;
+
+  position: fixed;
+  bottom: 0;
+
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
 }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
     selector: 'app-header',
@@ -7,17 +7,18 @@ import {Component, EventEmitter, Output} from '@angular/core';
 })
 export class HeaderComponent {
 
+    @Input() sidenavOpened: boolean;
     @Output() menuOpened = new EventEmitter<boolean>();
-    isOpen = false;
 
     constructor() {
     }
 
     onMenu() {
-        this.menuOpened.emit(this.isOpen);
-        this.isOpen = !this.isOpen;
+        this.sidenavOpened = !this.sidenavOpened;
+        this.menuOpened.emit(this.sidenavOpened);
     }
 
     onDisconnect() {
     }
+
 }

@@ -1,12 +1,8 @@
-<app-header (menuOpened)="sidenav.opened=$event"></app-header>
-<mat-sidenav-container id="sidenav-container">
-    <mat-sidenav #sidenav opened mode="side" role="navigation" id="sidenav">
+<app-header [sidenavOpened]="sidenavOpened" (menuOpened)="sidenav.opened=$event"></app-header>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav [opened]="sidenavOpened" [mode]="sideNavMode" role="navigation" [style.width]="sideNavWidth">
         <mat-nav-list>
-            <a mat-list-item>
-                <mat-icon mat-list-icon class="mr-2">chat</mat-icon>
-                All
-            </a>
-            <a mat-list-item *ngFor="let chat of chats" (click)="onOpenChat(chat)">
+            <a mat-list-item *ngFor="let chat of chats" (click)="selectedChat = chat">
                 <mat-icon mat-list-icon class="mr-2">person</mat-icon>
                 {{ chat.user }}
             </a>
@@ -17,7 +13,7 @@
             </a>
         </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content style="overflow-x: hidden">
+    <mat-sidenav-content>
         <app-chat [chat]="selectedChat"></app-chat>
     </mat-sidenav-content>
 </mat-sidenav-container>

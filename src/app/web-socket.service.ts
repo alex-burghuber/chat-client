@@ -14,9 +14,6 @@ export class WebSocketService {
     @Output()
     messageEmitter: EventEmitter<Message> = new EventEmitter(true);
 
-    constructor() {
-    }
-
     connect(uri: string) {
         this.webSocket = new WebSocket(uri);
         this.webSocket.onopen = () => this.onOpen();
