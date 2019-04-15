@@ -1,5 +1,7 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Message} from './objects/messages/Message';
+import {ChatMessage} from './objects/messages/ChatMessage';
+import {StatusMessage} from './objects/messages/StatusMessage';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +14,10 @@ export class WebSocketService {
     connectionEmitter: EventEmitter<boolean> = new EventEmitter(true);
 
     @Output()
-    messageEmitter: EventEmitter<Message> = new EventEmitter(true);
+    chatEmitter: EventEmitter<ChatMessage> = new EventEmitter(true);
+
+    @Output()
+    statusEmitter: EventEmitter<StatusMessage> = new EventEmitter(true);
 
     connect(uri: string) {
         this.webSocket = new WebSocket(uri);
@@ -39,11 +44,21 @@ export class WebSocketService {
     onMessage(ev) {
         console.log('onmessage');
         console.log('Received: ' + ev.data);
-        this.messageEmitter.emit(<Message>JSON.parse(ev.data));
+
+        const message = <Message>JSON.parse(ev.data);
+
+        if (message.type === 'chat') {
+            this.chatEmitter.emit(<ChatMessage>message);
+        } else if (message.type === 'status') {
+            this.statusEmitter.emit(<StatusMessage>message);
+        } else {
+            console.error('Could not interpret message');
+        }
     }
 
     onError(ev) {
-        console.log('onerror' + ev);
+        console.log('onerror');
+        console.error(ev);
         // this.connectionEmitter.emit(false);
     }
 

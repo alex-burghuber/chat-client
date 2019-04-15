@@ -60,27 +60,25 @@ export class AuthDialogComponent implements OnInit {
                 this.isLoading = false;
             }
         });
-        this.wsService.messageEmitter.subscribe(message => {
-            console.log(message.type + ' message: ' + (message.success ? 'Success' : 'Error'));
-            if (message.type === 'status') {
-                if (message.kind === 'register') {
-                    this.isLoading = false;
-                    this.registerStatus = message.content;
-                    if (message.success === true) {
-                        this.matTabIndex = 1;
-                    }
-                } else if (message.kind === 'login') {
-                    this.loginStatus = message.content;
-                    if (message.success === true) {
-                        this.data.uri = this.uri;
-                        this.data.username = this.username;
-                        this.data.password = this.password;
-                        this.dialogRef.close(this.data);
-                    } else if (this.isReloadConnect) {
-                        this.isReloadConnect = false;
-                        sessionStorage.clear();
-                        this.wsService.disconnect();
-                    }
+        this.wsService.statusEmitter.subscribe(statusMsg => {
+            console.log('Status: ' + statusMsg.kind + (statusMsg.success ? 'Success' : 'Error'));
+            if (statusMsg.kind === 'register') {
+                this.isLoading = false;
+                this.registerStatus = statusMsg.content;
+                if (statusMsg.success === true) {
+                    this.matTabIndex = 1;
+                }
+            } else if (statusMsg.kind === 'login') {
+                this.loginStatus = statusMsg.content;
+                if (statusMsg.success === true) {
+                    this.data.uri = this.uri;
+                    this.data.username = this.username;
+                    this.data.password = this.password;
+                    this.dialogRef.close(this.data);
+                } else if (this.isReloadConnect) {
+                    this.isReloadConnect = false;
+                    sessionStorage.clear();
+                    this.wsService.disconnect();
                 }
             }
         });

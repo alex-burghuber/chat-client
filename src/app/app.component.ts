@@ -1,4 +1,4 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {AuthDialogComponent} from './components/auth-dialog/auth-dialog.component';
@@ -12,16 +12,16 @@ import {ChatMessage} from './objects/messages/ChatMessage';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
     chats: Chat[] = [
         new Chat('Peter', [
-            new ChatMessage('chat', 'test', 'Peter', 'Hey!'),
-            new ChatMessage('chat', 'test', 'Peter', 'How u doing?')
+            new ChatMessage('chat', 'Peter', 'test', 'user', 'Hey!'),
+            new ChatMessage('chat', 'Peter', 'test', 'user', 'How u doing?')
         ]),
         new Chat('Karl', [
-            new ChatMessage('chat', 'test', 'Karl', 'yo!'),
-            new ChatMessage('chat', 'test', 'Karl', 'wot up?')
+            new ChatMessage('chat', 'Karl', 'test', 'user', 'yo!'),
+            new ChatMessage('chat', 'Karl', 'test', 'user', 'wot up?')
         ])
     ];
 
@@ -38,6 +38,13 @@ export class AppComponent {
         this.openAuthDialog();
         // initial responsive render of the sidenav
         this.resizeHandler(true);
+    }
+
+    ngOnInit(): void {
+        this.wsService.chatEmitter.subscribe(chatMsg => {
+            const chat = this.chats.find(element => element.contact === chatMsg.sender);
+            chat.messages.push(<ChatMessage>chatMsg);
+        });
     }
 
     /**

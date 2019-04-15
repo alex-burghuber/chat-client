@@ -1,7 +1,7 @@
 import {ChatMessage} from './messages/ChatMessage';
 
 export class Chat {
-    constructor(public user: string,
+    constructor(public contact: string,
                 public messages?: ChatMessage[]) {
     }
 }

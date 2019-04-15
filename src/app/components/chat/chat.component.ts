@@ -18,7 +18,8 @@ export class ChatComponent {
 
     onSend() {
         if (this.inputMessage !== '') {
-            const chatMessage = new ChatMessage('chat', this.chat.user, sessionStorage.getItem('username'), this.inputMessage);
+            const chatMessage = new ChatMessage('chat', sessionStorage.getItem('username'), this.chat.contact, 'user', this.inputMessage);
+            this.chat.messages.push(chatMessage);
             this.wsService.send(chatMessage);
             this.inputMessage = '';
         }
