@@ -23,7 +23,7 @@
                     <mat-icon style="transform: scale(1.5)">gif</mat-icon>
                 </button>
                 <mat-form-field appearance="standard" style="flex-grow: 1" class="mx-2">
-                    <input matInput #input name="message" maxlength="128" placeholder="Message"
+                    <input matInput #input name="message" maxlength="128" placeholder="Message" autocomplete="off"
                            [(ngModel)]="inputMessage">
                     <p matSuffix style="font-size: 0.7em">{{ input.value.length }} / {{ input.maxLength }}</p>
                 </mat-form-field>

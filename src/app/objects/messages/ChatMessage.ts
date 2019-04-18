@@ -5,6 +5,7 @@ export class ChatMessage extends Message {
                 public sender: string,
                 public receiver: string,
                 public kind: string,
+                public time: number,
                 public content: string) {
         super(type);
     }

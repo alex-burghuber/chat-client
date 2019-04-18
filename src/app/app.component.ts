@@ -15,14 +15,19 @@ import {ChatMessage} from './objects/messages/ChatMessage';
 export class AppComponent implements OnInit {
 
     chats: Chat[] = [
+        new Chat('Start', [
+            new ChatMessage('chat', 'Sender', '', '', 0, 'This is an example message')
+        ])
+        /*
         new Chat('Peter', [
-            new ChatMessage('chat', 'Peter', 'test', 'user', 'Hey!'),
-            new ChatMessage('chat', 'Peter', 'test', 'user', 'How u doing?')
+            new ChatMessage('chat', 'Peter', 'test', 'user', 1555581470, 'Hey!'),
+            new ChatMessage('chat', 'Peter', 'test', 'user', 1555581475, 'How u doing?')
         ]),
         new Chat('Karl', [
-            new ChatMessage('chat', 'Karl', 'test', 'user', 'yo!'),
-            new ChatMessage('chat', 'Karl', 'test', 'user', 'wot up?')
+            new ChatMessage('chat', 'Karl', 'test', 'user', 1555581480, 'yo!'),
+            new ChatMessage('chat', 'Karl', 'test', 'user', 1555581485, 'wot up?')
         ])
+        */
     ];
 
     selectedChat = this.chats[0];
@@ -41,9 +46,32 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.wsService.chatEmitter.subscribe(chatMsg => {
-            const chat = this.chats.find(element => element.contact === chatMsg.sender);
+        this.wsService.chatEmitter.subscribe((chatMsg: ChatMessage) => {
+            // get username of the client
+            const username = sessionStorage.getItem('username');
+
+            // check if the client is the sender or the receiver of the msg
+            const chatContact = (chatMsg.sender === username ? chatMsg.receiver : chatMsg.sender);
+
+            // find the correct chat where the msg belongs to
+            let chat = this.chats.find(chatsElement => chatsElement.contact === chatContact);
+
+            // if the msg hasn't been found, create a new one
+            if (chat === undefined) {
+                chat = new Chat(chatContact, []);
+                this.chats.push(chat);
+            }
+            // add the msg to the chat
             chat.messages.push(<ChatMessage>chatMsg);
+
+            // sort the chat msg by time sent
+            chat.messages.sort((a, b) => {
+                if (a.time >= b.time) {
+                    return 1;
+                } else if (a.time < b.time) {
+                    return -1;
+                }
+            });
         });
     }
 
@@ -84,10 +112,12 @@ export class AppComponent implements OnInit {
             sessionStorage.setItem('username', data.username);
             sessionStorage.setItem('password', data.password);
 
+            // display snackbar
             const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
             this.snackBar.open(snackBarMessage, 'Nice', {
                 duration: 2000
             });
+
         });
     }
 
@@ -97,7 +127,7 @@ export class AppComponent implements OnInit {
         });
         addChatDialogRef.afterClosed().subscribe(data => {
             if (data !== undefined) {
-                const chat = new Chat(data.name);
+                const chat = new Chat(data.name, []);
                 this.chats.push(chat);
                 this.selectedChat = chat;
             }

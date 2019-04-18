@@ -27,6 +27,7 @@ export class AuthDialogComponent implements OnInit {
     hasTriedToConnect = false;
     passwordsUnequal: boolean;
 
+    // Logic fields
     matTabIndex: number;
     isReloadConnect: boolean;
 
