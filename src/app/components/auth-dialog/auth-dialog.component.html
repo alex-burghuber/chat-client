@@ -1,0 +1,101 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+    <div>
+        <mat-form-field mat-line style="width: 100%">
+            <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="uri" type="url">
+        </mat-form-field>
+        <div id="connectActions">
+            <div style="flex-grow: 1" class="mr-3">
+                <mat-label *ngIf="!isLoading">
+                    {{ connectionStatus }}
+                </mat-label>
+                <mat-progress-spinner *ngIf="isLoading && !isConnected" mode="indeterminate" diameter="26">
+                </mat-progress-spinner>
+            </div>
+            <button mat-raised-button color="primary" [innerHTML]="isConnected ? 'Disconnect' : 'Connect'"
+                    [style.margin-left]="(!isLoading || isConnected) ? 'auto' : 'unset'" (click)="onConnect()">
+                Connect
+            </button>
+        </div>
+    </div>
+    <div *ngIf="isConnected">
+        <mat-tab-group [(selectedIndex)]="matTabIndex" dynamicHeight>
+            <mat-tab label="Register">
+                <form (ngSubmit)="onRegister()" class="mt-2">
+                    <p>
+                        <mat-form-field appearance="outline"
+                                        hideRequiredMarker="true">
+                            <mat-label>Username</mat-label>
+                            <input matInput type="text" [(ngModel)]="username" required
+                                   placeholder="Username" autocomplete="off" name="username">
+                            <mat-icon matSuffix>person</mat-icon>
+                            <mat-error>Required</mat-error>
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field appearance="outline"
+                                        hideRequiredMarker="true">
+                            <mat-label>Password</mat-label>
+                            <input matInput type="password" [(ngModel)]="password" required
+                                   placeholder="Password" name="password">
+                            <mat-icon matSuffix>lock</mat-icon>
+                            <mat-error>Required</mat-error>
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field appearance="outline"
+                                        hideRequiredMarker="true">
+                            <mat-label>Repeat Password</mat-label>
+                            <input matInput type="password" [(ngModel)]="repeatPassword" required
+                                   placeholder="Repeat Password" name="repeatPassword">
+                            <mat-icon matSuffix>lock</mat-icon>
+                            <mat-error>Required</mat-error>
+                        </mat-form-field>
+                    </p>
+                    <div style="display: flex; align-items: center;" class="p-2">
+                        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+                            Register
+                        </button>
+                        <mat-label *ngIf="!isLoading" class="ml-2" [innerHTML]="registerStatus"></mat-label>
+                        <mat-progress-spinner *ngIf="isLoading" style="margin-left: auto;" class="ml-2"
+                                              mode="indeterminate" diameter="30">
+                        </mat-progress-spinner>
+                    </div>
+                </form>
+            </mat-tab>
+            <mat-tab label="Login">
+                <form (ngSubmit)="onLogin()" class="mt-2">
+                    <p>
+                        <mat-form-field appearance="outline"
+                                        hideRequiredMarker="true">
+                            <mat-label>Username</mat-label>
+                            <input matInput type="text" [(ngModel)]="username" required
+                                   placeholder="Username" autocomplete="off" name="username">
+                            <mat-icon matSuffix>person</mat-icon>
+                            <mat-error>Required</mat-error>
+                        </mat-form-field>
+                    </p>
+                    <p>
+                        <mat-form-field appearance="outline"
+                                        hideRequiredMarker="true">
+                            <mat-label>Password</mat-label>
+                            <input matInput type="password" [(ngModel)]="password" required
+                                   placeholder="Password" name="password">
+                            <mat-icon matSuffix>lock</mat-icon>
+                            <mat-error>Required</mat-error>
+                        </mat-form-field>
+                    </p>
+                    <div style="display: flex; align-items: center;" class="p-2">
+                        <button mat-raised-button type="submit" color="primary" [disabled]="isLoading">
+                            Login
+                        </button>
+                        <mat-label *ngIf="!isLoading" class="ml-2" [innerHTML]="loginStatus"></mat-label>
+                        <mat-progress-spinner *ngIf="isLoading" style="margin-left: auto;" class="ml-2"
+                                              mode="indeterminate" diameter="30">
+                        </mat-progress-spinner>
+                    </div>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
