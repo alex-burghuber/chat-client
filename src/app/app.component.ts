@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
     sideNavWidth = '15%';
     sidenavOpened = true;
 
-    constructor(private wsService: WebSocketService,
+    constructor(public wsService: WebSocketService,
                 private router: Router,
                 private dialog: MatDialog,
                 private snackBar: MatSnackBar) {
