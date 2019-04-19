@@ -9,6 +9,7 @@ export class HeaderComponent {
 
     @Input() sidenavOpened: boolean;
     @Output() menuOpened = new EventEmitter<boolean>();
+    @Output() disconnect = new EventEmitter();
 
     constructor() {
     }
@@ -19,6 +20,7 @@ export class HeaderComponent {
     }
 
     onDisconnect() {
+        this.disconnect.emit();
     }
 
 }

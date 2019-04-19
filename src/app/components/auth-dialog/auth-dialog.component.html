@@ -1,21 +1,22 @@
-<h1 mat-dialog-title>Hello there!</h1>
+<h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-    <div style="display: flex; align-items: center;">
-        <mat-form-field style="width: 60%">
+    <div>
+        <mat-form-field mat-line style="width: 100%">
             <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="uri" type="url">
         </mat-form-field>
-        <mat-label *ngIf="!isLoading && !isConnected && hasTriedToConnect" style="margin-left: auto">
-            No connection
-        </mat-label>
-        <mat-progress-spinner *ngIf="isLoading && !isConnected" style="margin-left: auto;" class="mr-2"
-                              mode="indeterminate" diameter="30">
-        </mat-progress-spinner>
-        <button mat-raised-button color="primary"
-                [innerHTML]="isConnected ? 'Disconnect' : 'Connect'"
-                [style.margin-left]="(!isLoading || isConnected) ? 'auto' : 'unset'"
-                (click)="onConnect()">
-            Connect
-        </button>
+        <div id="connectActions">
+            <div style="flex-grow: 1" class="mr-3">
+                <mat-label *ngIf="!isLoading">
+                    {{ connectionStatus }}
+                </mat-label>
+                <mat-progress-spinner *ngIf="isLoading && !isConnected" mode="indeterminate" diameter="26">
+                </mat-progress-spinner>
+            </div>
+            <button mat-raised-button color="primary" [innerHTML]="isConnected ? 'Disconnect' : 'Connect'"
+                    [style.margin-left]="(!isLoading || isConnected) ? 'auto' : 'unset'" (click)="onConnect()">
+                Connect
+            </button>
+        </div>
     </div>
     <div *ngIf="isConnected">
         <mat-tab-group [(selectedIndex)]="matTabIndex" dynamicHeight>

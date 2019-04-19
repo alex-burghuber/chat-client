@@ -26,6 +26,7 @@ export class AuthDialogComponent implements OnInit {
     isConnected = false;
     hasTriedToConnect = false;
     passwordsUnequal: boolean;
+    connectionStatus = 'Connect to the server';
 
     // Logic fields
     matTabIndex: number;
@@ -46,6 +47,7 @@ export class AuthDialogComponent implements OnInit {
     ngOnInit(): void {
         this.wsService.connectionEmitter.subscribe(isConnected => {
             console.log('Auth-Dialog: ' + (isConnected ? 'connected' : 'connection failed'));
+            this.connectionStatus = isConnected ? 'Connected' : 'Connection failed';
             if (isConnected && this.isReloadConnect) {
                 // re-login if the page was reloaded
                 console.log('re-login...');
@@ -63,8 +65,8 @@ export class AuthDialogComponent implements OnInit {
         });
         this.wsService.statusEmitter.subscribe(statusMsg => {
             console.log('Status: ' + statusMsg.kind + (statusMsg.success ? 'Success' : 'Error'));
+            this.isLoading = false;
             if (statusMsg.kind === 'register') {
-                this.isLoading = false;
                 this.registerStatus = statusMsg.content;
                 if (statusMsg.success === true) {
                     this.matTabIndex = 1;
@@ -110,6 +112,7 @@ export class AuthDialogComponent implements OnInit {
 
     onLogin() {
         if (this.username !== '' && this.password !== '') {
+            this.isLoading = true;
             const authMessage = new AuthMessage('auth', 'login', this.username, this.password);
             this.wsService.send(authMessage);
         }

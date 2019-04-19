@@ -1,4 +1,5 @@
-<app-header [sidenavOpened]="sidenavOpened" (menuOpened)="sidenav.opened=$event"></app-header>
+<app-header [sidenavOpened]="sidenavOpened" (disconnect)="wsService.disconnect()"
+            (menuOpened)="sidenav.opened=$event"></app-header>
 <mat-sidenav-container>
     <mat-sidenav #sidenav [opened]="sidenavOpened" [mode]="sideNavMode" role="navigation" [style.width]="sideNavWidth">
         <mat-nav-list>

@@ -6,6 +6,7 @@ import {WebSocketService} from './web-socket.service';
 import {AddChatDialogComponent} from './components/add-chat-dialog/add-chat-dialog.component';
 import {Chat} from './objects/Chat';
 import {ChatMessage} from './objects/messages/ChatMessage';
+import {StatusMessage} from './objects/messages/StatusMessage';
 
 @Component({
     selector: 'app-root',
@@ -40,7 +41,7 @@ export class AppComponent implements OnInit {
                 private dialog: MatDialog,
                 private snackBar: MatSnackBar) {
         // open the authentication dialog
-        this.openAuthDialog();
+        this.openAuthDialog('Hello there!');
         // initial responsive render of the sidenav
         this.resizeHandler(true);
     }
@@ -64,7 +65,7 @@ export class AppComponent implements OnInit {
             // add the msg to the chat
             chat.messages.push(<ChatMessage>chatMsg);
 
-            // sort the chat msg by time sent
+            // sort the chat messages by time sent
             chat.messages.sort((a, b) => {
                 if (a.time >= b.time) {
                     return 1;
@@ -72,6 +73,20 @@ export class AppComponent implements OnInit {
                     return -1;
                 }
             });
+        });
+        this.wsService.statusEmitter.subscribe((statusMsg: StatusMessage) => {
+            if (statusMsg.kind === 'chat') {
+                this.snackBar.open(statusMsg.content, 'Ok', {
+                    duration: 4000
+                });
+            }
+        });
+        this.wsService.connectionEmitter.subscribe(isConnected => {
+            if (!isConnected) {
+                if (this.dialog.getDialogById('auth') === undefined) {
+                    this.openAuthDialog('Connection lost');
+                }
+            }
         });
     }
 
@@ -99,12 +114,14 @@ export class AppComponent implements OnInit {
         }
     }
 
-    openAuthDialog() {
+    openAuthDialog(title: string) {
         this.dialog.closeAll();
         const authDialogRef = this.dialog.open(AuthDialogComponent, {
-            minWidth: '40%',
+            minWidth: '30%',
+            maxWidth: '90%',
             disableClose: true,
-            data: {}
+            data: {title: title},
+            id: 'auth'
         });
         authDialogRef.afterClosed().subscribe(data => {
             // save the data for auto reconnect + login on reload
@@ -113,11 +130,10 @@ export class AppComponent implements OnInit {
             sessionStorage.setItem('password', data.password);
 
             // display snackbar
-            const snackBarMessage = 'Connected to ' + data.uri + ' as ' + data.username;
-            this.snackBar.open(snackBarMessage, 'Nice', {
+            const message = 'Connected to ' + data.uri + ' as ' + data.username;
+            this.snackBar.open(message, 'Nice', {
                 duration: 2000
             });
-
         });
     }
 
@@ -134,4 +150,7 @@ export class AppComponent implements OnInit {
         });
     }
 
+    onDisconnect() {
+
+    }
 }

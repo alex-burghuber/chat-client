@@ -29,6 +29,7 @@ export class WebSocketService {
 
     disconnect() {
         this.webSocket.close();
+        sessionStorage.clear();
     }
 
     onOpen() {
@@ -59,7 +60,7 @@ export class WebSocketService {
     onError(ev) {
         console.log('onerror');
         console.error(ev);
-        // this.connectionEmitter.emit(false);
+        this.connectionEmitter.emit(false);
     }
 
     send(message: Message) {
