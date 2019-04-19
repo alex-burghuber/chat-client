@@ -10,8 +10,14 @@
                 <h1 mat-subheader>Chat History</h1>
                 <mat-list-item *ngFor="let message of chat.messages">
                     <mat-icon mat-list-icon>person</mat-icon>
-                    <p mat-line style="font-size: 0.9em">{{ message.sender }}</p>
-                    <p mat-line style="font-size: 1em">{{ message.content }}</p>
+                    <p mat-line style="font-size: 0.9em">
+                        {{ message.sender }}
+                        <span style="font-size: 0.8em; color: grey"
+                              class="ml-2"> {{ message.time | date:'hh:mm' }}</span>
+                    </p>
+                    <p mat-line style="font-size: 1em">
+                        {{ message.content }}
+                    </p>
                 </mat-list-item>
             </mat-list>
         </div>
