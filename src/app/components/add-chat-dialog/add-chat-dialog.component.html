@@ -1,9 +1,16 @@
 <h1 mat-dialog-title>Add a new chat</h1>
 <div mat-dialog-content>
-    <mat-form-field>
-        <input matInput type="text" placeholder="Name" autocomplete="off" (keyup.enter)="onEnter()"
-               [(ngModel)]="data.name">
-    </mat-form-field>
+    <section>
+        <mat-form-field>
+            <input matInput type="text" placeholder="Name" autocomplete="off" (keyup.enter)="onEnter()"
+                   [(ngModel)]="data.name">
+        </mat-form-field>
+    </section>
+    <section>
+        <mat-checkbox [(ngModel)]="isChecked">
+            Group
+        </mat-checkbox>
+    </section>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onCancel()">Cancel</button>

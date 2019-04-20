@@ -9,7 +9,9 @@
             <mat-list>
                 <h1 mat-subheader>Chat History</h1>
                 <mat-list-item *ngFor="let message of chat.messages">
-                    <mat-icon mat-list-icon>person</mat-icon>
+                    <mat-icon mat-list-icon>
+                        person
+                    </mat-icon>
                     <p mat-line style="font-size: 0.9em">
                         {{ message.sender }}
                         <span style="font-size: 0.8em; color: grey"

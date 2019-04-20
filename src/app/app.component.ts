@@ -7,6 +7,8 @@ import {AddChatDialogComponent} from './components/add-chat-dialog/add-chat-dial
 import {Chat} from './objects/Chat';
 import {ChatMessage} from './objects/messages/ChatMessage';
 import {StatusMessage} from './objects/messages/StatusMessage';
+import {AddChatDialogData} from './interfaces/AddChatDialogData';
+import {GroupMessage} from './objects/messages/GroupMessage';
 
 @Component({
     selector: 'app-root',
@@ -16,19 +18,9 @@ import {StatusMessage} from './objects/messages/StatusMessage';
 export class AppComponent implements OnInit {
 
     chats: Chat[] = [
-        new Chat('Start', [
+        new Chat('Start', 'user', [
             new ChatMessage('chat', 'Sender', '', '', 0, 'This is an example message')
         ])
-        /*
-        new Chat('Peter', [
-            new ChatMessage('chat', 'Peter', 'test', 'user', 1555581470, 'Hey!'),
-            new ChatMessage('chat', 'Peter', 'test', 'user', 1555581475, 'How u doing?')
-        ]),
-        new Chat('Karl', [
-            new ChatMessage('chat', 'Karl', 'test', 'user', 1555581480, 'yo!'),
-            new ChatMessage('chat', 'Karl', 'test', 'user', 1555581485, 'wot up?')
-        ])
-        */
     ];
 
     selectedChat = this.chats[0];
@@ -51,17 +43,22 @@ export class AppComponent implements OnInit {
             // get username of the client
             const username = sessionStorage.getItem('username');
 
-            // check if the client is the sender or the receiver of the msg
-            const chatContact = (chatMsg.sender === username ? chatMsg.receiver : chatMsg.sender);
+            // get the chat contact
+            let chatContact = chatMsg.receiver;
+            if (chatMsg.kind === 'user') {
+                // check if the client is the sender or the receiver of the msg
+                chatContact = (chatMsg.sender === username ? chatMsg.receiver : chatMsg.sender);
+            }
 
             // find the correct chat where the msg belongs to
-            let chat = this.chats.find(chatsElement => chatsElement.contact === chatContact);
+            let chat = this.chats.find(chatsElement => chatsElement.contact === chatContact && chatsElement.kind === chatMsg.kind);
 
             // if the msg hasn't been found, create a new one
             if (chat === undefined) {
-                chat = new Chat(chatContact, []);
+                chat = new Chat(chatContact, chatMsg.kind, []);
                 this.chats.push(chat);
             }
+
             // add the msg to the chat
             chat.messages.push(<ChatMessage>chatMsg);
 
@@ -73,6 +70,7 @@ export class AppComponent implements OnInit {
                     return -1;
                 }
             });
+
         });
         this.wsService.statusEmitter.subscribe((statusMsg: StatusMessage) => {
             if (statusMsg.kind === 'chat') {
@@ -141,16 +139,29 @@ export class AppComponent implements OnInit {
         const addChatDialogRef = this.dialog.open(AddChatDialogComponent, {
             data: {}
         });
-        addChatDialogRef.afterClosed().subscribe(data => {
+        addChatDialogRef.afterClosed().subscribe((data: AddChatDialogData) => {
             if (data !== undefined) {
-                const chat = new Chat(data.name, []);
+                console.log('Adding chat: ' + data.name + ',' + data.kind);
+                const chat = new Chat(data.name, data.kind, []);
                 this.chats.push(chat);
                 this.selectedChat = chat;
+                if (data.kind === 'group') {
+                    const groupMsg = new GroupMessage('group', data.name);
+                    this.wsService.send(groupMsg);
+                }
             }
         });
     }
 
     onDisconnect() {
-
+        // disconnect from the websocket
+        this.wsService.disconnect();
+        // reset chat view
+        this.chats = [
+            new Chat('Start', 'user',
+                [new ChatMessage('chat', 'Sender', '', '', 0, 'This is an example message')
+                ])
+        ];
+        this.selectedChat = this.chats[0];
     }
 }

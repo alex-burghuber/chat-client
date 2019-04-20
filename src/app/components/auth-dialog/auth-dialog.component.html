@@ -1,6 +1,11 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+    <h1 mat-dialog-title>{{ data.title }}</h1>
+    <button mat-icon-button (click)="onGithub()">
+        <img src="../../../assets/GitHub-Mark-120px-plus.png" alt="Github" style="width: 60%">
+    </button>
+</div>
 <div mat-dialog-content>
-    <div>
+    <div style="overflow-y: hidden">
         <mat-form-field mat-line style="width: 100%">
             <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="uri" type="url">
         </mat-form-field>
@@ -9,7 +14,7 @@
                 <mat-label *ngIf="!isLoading">
                     {{ connectionStatus }}
                 </mat-label>
-                <mat-progress-spinner *ngIf="isLoading && !isConnected" mode="indeterminate" diameter="26">
+                <mat-progress-spinner *ngIf="isLoading && !isConnected" mode="indeterminate" diameter="30">
                 </mat-progress-spinner>
             </div>
             <button mat-raised-button color="primary" [innerHTML]="isConnected ? 'Disconnect' : 'Connect'"

@@ -9,6 +9,8 @@ import {AddChatDialogData} from '../../interfaces/AddChatDialogData';
 })
 export class AddChatDialogComponent {
 
+    isChecked = false;
+
     constructor(public dialogRef: MatDialogRef<AddChatDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: AddChatDialogData) {
         this.data.name = '';
@@ -16,6 +18,7 @@ export class AddChatDialogComponent {
 
     onEnter() {
         if (this.data.name !== '') {
+            this.data.kind = this.isChecked ? 'group' : 'user';
             this.dialogRef.close(this.data);
         }
     }
