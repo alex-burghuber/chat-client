@@ -7,6 +7,7 @@ import {
     MatBottomSheetModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatGridListModule,
@@ -54,7 +55,8 @@ import {AddChatDialogComponent} from './components/add-chat-dialog/add-chat-dial
         MatTabsModule,
         MatFormFieldModule,
         MatGridListModule,
-        MatBottomSheetModule
+        MatBottomSheetModule,
+        MatCheckboxModule
     ],
     entryComponents: [
         AuthDialogComponent,

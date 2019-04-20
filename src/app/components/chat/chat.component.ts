@@ -22,7 +22,7 @@ export class ChatComponent {
                 'chat',
                 sessionStorage.getItem('username'),
                 this.chat.contact,
-                'user',
+                this.chat.kind,
                 Date.now(),
                 this.inputMessage
             );

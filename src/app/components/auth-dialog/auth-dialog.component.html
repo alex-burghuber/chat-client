@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-    <div>
+    <div style="overflow-y: hidden">
         <mat-form-field mat-line style="width: 100%">
             <input matInput placeholder="URI" [disabled]="isConnected" [(ngModel)]="uri" type="url">
         </mat-form-field>
@@ -9,7 +9,7 @@
                 <mat-label *ngIf="!isLoading">
                     {{ connectionStatus }}
                 </mat-label>
-                <mat-progress-spinner *ngIf="isLoading && !isConnected" mode="indeterminate" diameter="26">
+                <mat-progress-spinner *ngIf="isLoading && !isConnected" mode="indeterminate" diameter="30">
                 </mat-progress-spinner>
             </div>
             <button mat-raised-button color="primary" [innerHTML]="isConnected ? 'Disconnect' : 'Connect'"
