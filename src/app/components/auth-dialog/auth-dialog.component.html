@@ -1,4 +1,9 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+    <h1 mat-dialog-title>{{ data.title }}</h1>
+    <button mat-icon-button (click)="onGithub()">
+        <img src="../../../assets/GitHub-Mark-120px-plus.png" alt="Github" style="width: 60%">
+    </button>
+</div>
 <div mat-dialog-content>
     <div style="overflow-y: hidden">
         <mat-form-field mat-line style="width: 100%">

@@ -118,4 +118,7 @@ export class AuthDialogComponent implements OnInit {
         }
     }
 
+    onGithub() {
+        window.open('https://github.com/Alexander-Burghuber/chat-client').focus();
+    }
 }
