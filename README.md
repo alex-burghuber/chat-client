@@ -1,6 +1,6 @@
 # Chat Client
 
-[Chat Server](https://github.com/Alexander-Burghuber/chat-server)
+Angular Client for [Chat Server](https://github.com/Alexander-Burghuber/chat-server)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.1.
 
