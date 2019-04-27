@@ -27,9 +27,6 @@
     <div class="row" style="position: relative">
         <form (ngSubmit)="onSend()">
             <div id="messageInput" class="col-xl-6 col-lg-8 col-12 ml-lg-4 mb-lg-4">
-                <button mat-icon-button>
-                    <mat-icon style="transform: scale(1.5)">gif</mat-icon>
-                </button>
                 <mat-form-field appearance="standard" style="flex-grow: 1" class="mx-2">
                     <input matInput #input name="message" maxlength="128" placeholder="Message" autocomplete="off"
                            [(ngModel)]="inputMessage">
